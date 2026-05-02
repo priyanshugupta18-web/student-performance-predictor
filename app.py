@@ -7,6 +7,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
 
+st.set_page_config(page_title="Student Predictor", layout="centered")
+
 st.title("🎓 Student Performance Predictor")
 
 df = pd.read_csv("student_data.csv")
@@ -43,37 +45,36 @@ st.subheader("📥 Enter Student Details")
 
 sex = st.selectbox("Gender", ["Male", "Female"])
 
-age = st.slider("Age (Student age in years)", 15, 22, 17)
+age = st.number_input("Age (in years)", min_value=15, max_value=22, value=17)
 
-studytime = st.slider(
-    "Study Time (Weekly study hours level: 1 <2h, 2=2–5h, 3=5–10h, 4 >10h)",
-    1, 4, 2
+studytime = st.number_input(
+    "Study Time (1:<2h, 2=2–5h, 3=5–10h, 4>10h)",
+    min_value=1, max_value=4, value=2
 )
 
-failures = st.slider(
-    "Past Failures (Number of past class failures)",
-    0, 3, 0
+failures = st.number_input(
+    "Past Failures (number of previous failures)",
+    min_value=0, max_value=3, value=0
 )
 
-absences = st.slider(
-    "Absences (Number of school absences)",
-    0, 50, 5
+absences = st.number_input(
+    "Absences (number of school absences)",
+    min_value=0, max_value=50, value=5
 )
 
-G1 = st.slider(
-    "G1 (First period grade out of 20)",
-    0, 20, 10
+G1 = st.number_input(
+    "G1 (first exam grade out of 20)",
+    min_value=0, max_value=20, value=10
 )
 
-G2 = st.slider(
-    "G2 (Second period grade out of 20)",
-    0, 20, 10
+G2 = st.number_input(
+    "G2 (second exam grade out of 20)",
+    min_value=0, max_value=20, value=10
 )
 
 sex_val = 1 if sex == "Male" else 0
 
 if st.button("Predict"):
-
     input_data = [[sex_val, age, studytime, failures, absences, G1, G2]]
     input_data = scaler.transform(input_data)
 
