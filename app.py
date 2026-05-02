@@ -1,131 +1,93 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+import matplotlib.pyplot as plt
 
-from sklearn.preprocessing import StandardScaler
-from sklearn.cluster import KMeans
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
 
-# -------------------- UI CONFIG --------------------
-st.set_page_config(page_title="Music Personality Analyzer", layout="centered")
+st.title("🎓 Student Performance Predictor")
 
-st.title("🎵 Music Personality Analyzer")
-st.markdown("Find your personality based on your music taste")
+df = pd.read_csv("student_data.csv")
+df.drop_duplicates(inplace=True)
 
-# -------------------- LOAD DATA --------------------
-df = pd.read_csv("spotify.csv")
+features = ['sex', 'age', 'studytime', 'failures', 'absences', 'G1', 'G2']
+df_model = df[features + ['G3']].copy()
 
-# -------------------- FEATURE SELECTION --------------------
-features = df[['energy', 'danceability', 'valence', 'tempo', 'loudness']]
-features = features.dropna()
+df_model['result'] = (df_model['G3'] >= 10).astype(int)
+df_model.drop('G3', axis=1, inplace=True)
 
-# -------------------- SCALING --------------------
-scaler = StandardScaler()
-scaled_data = scaler.fit_transform(features)
+df_model['sex'] = df_model['sex'].map({'F': 0, 'M': 1})
 
-# -------------------- K-MEANS --------------------
-kmeans = KMeans(n_clusters=5, random_state=42)
-clusters = kmeans.fit_predict(scaled_data)
-
-features['cluster'] = clusters
-
-# -------------------- CLUSTER LABELING --------------------
-cluster_map = {
-    0: 'Chill',
-    1: 'Sad',
-    2: 'Energetic',
-    3: 'Happy',
-    4: 'Aggressive'
-}
-
-features['music_type'] = features['cluster'].map(cluster_map)
-
-# -------------------- MUSIC → PERSONALITY --------------------
-def get_personality(music_type):
-    if music_type == "Energetic":
-        return "Energetic"
-    elif music_type == "Chill":
-        return "Chill"
-    elif music_type == "Happy":
-        return "Happy"
-    elif music_type == "Sad":
-        return "Sad"
-    else:
-        return "Aggressive"
-
-features['personality'] = features['music_type'].apply(get_personality)
-
-# -------------------- MODEL DATA --------------------
-X = scaled_data
-y = features['personality']
+X = df_model.drop('result', axis=1)
+y = df_model['result']
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# -------------------- TRAIN MODELS --------------------
-knn = KNeighborsClassifier(n_neighbors=5)
-knn.fit(X_train, y_train)
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
 
-nb = GaussianNB()
-nb.fit(X_train, y_train)
+model = KNeighborsClassifier(n_neighbors=5)
+model.fit(X_train, y_train)
 
-# -------------------- MODEL ACCURACY --------------------
-st.subheader("📊 Model Accuracy")
+y_pred = model.predict(X_test)
 
-knn_acc = accuracy_score(y_test, knn.predict(X_test))
-nb_acc = accuracy_score(y_test, nb.predict(X_test))
+st.subheader("📈 Model Accuracy")
+st.write(round(accuracy_score(y_test, y_pred), 2))
 
-st.write(f"KNN Accuracy: {knn_acc:.2f}")
-st.write(f"Naive Bayes Accuracy: {nb_acc:.2f}")
+st.subheader("📥 Enter Student Details")
 
-# -------------------- USER INPUT --------------------
-st.subheader("🎚️ Enter Your Music Preferences")
+sex = st.selectbox("Gender", ["Male", "Female"])
 
-energy = st.slider("Energy", 0.0, 1.0, 0.5)
-danceability = st.slider("Danceability", 0.0, 1.0, 0.5)
-valence = st.slider("Valence (Happiness)", 0.0, 1.0, 0.5)
-tempo = st.slider("Tempo", 50.0, 200.0, 120.0)
-loudness = st.slider("Loudness", -60.0, 0.0, -10.0)
+age = st.slider("Age (Student age in years)", 15, 22, 17)
 
-# -------------------- PERSONALITY MAP --------------------
-personality_map = {
-    "Energetic": ("The High-Energy Type", "You like to stay active and enjoy fast-paced vibes."),
-    "Chill": ("The Relaxed Soul", "You prefer a calm environment and peaceful music."),
-    "Happy": ("The Positive Spirit", "You have an optimistic outlook and love feel-good music."),
-    "Sad": ("The Deep Thinker", "You connect deeply with emotions and meaningful lyrics."),
-    "Aggressive": ("The Intense Personality", "You are bold and enjoy music with power and impact.")
-}
+studytime = st.slider(
+    "Study Time (Weekly study hours level: 1 <2h, 2=2–5h, 3=5–10h, 4 >10h)",
+    1, 4, 2
+)
 
-# -------------------- PREDICTION --------------------
-if st.button("🔮 Predict Personality"):
+failures = st.slider(
+    "Past Failures (Number of past class failures)",
+    0, 3, 0
+)
 
-    user_input = [[energy, danceability, valence, tempo, loudness]]
+absences = st.slider(
+    "Absences (Number of school absences)",
+    0, 50, 5
+)
 
-    user_scaled = scaler.transform(user_input)
+G1 = st.slider(
+    "G1 (First period grade out of 20)",
+    0, 20, 10
+)
 
-    predicted_personality = knn.predict(user_scaled)[0]
+G2 = st.slider(
+    "G2 (Second period grade out of 20)",
+    0, 20, 10
+)
 
-    personality_data = personality_map.get(
-        predicted_personality,
-        ("Music Lover", "You enjoy a wide variety of musical styles.")
-    )
+sex_val = 1 if sex == "Male" else 0
 
-    label, description = personality_data
+if st.button("Predict"):
 
-    st.success(f"🎯 Personality: {label}")
-    st.write(description)
+    input_data = [[sex_val, age, studytime, failures, absences, G1, G2]]
+    input_data = scaler.transform(input_data)
 
-    # -------------------- VISUAL --------------------
-    st.subheader("📊 Your Music Profile")
+    prediction = model.predict(input_data)[0]
 
-    import matplotlib.pyplot as plt
+    if prediction == 1:
+        st.success("✅ Student will PASS")
+    else:
+        st.error("❌ Student will FAIL")
 
-    labels = ['Energy', 'Danceability', 'Valence']
-    values = [energy, danceability, valence]
+    st.subheader("📊 Your Input Visualization")
+
+    labels = ['Study Time', 'Failures', 'Absences', 'G1', 'G2']
+    values = [studytime, failures, absences, G1, G2]
 
     fig, ax = plt.subplots()
     ax.bar(labels, values)

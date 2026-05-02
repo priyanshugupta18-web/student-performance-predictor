@@ -1,91 +1,101 @@
-# 🎵 Music Personality Analyzer
+# 🎓 Student Performance Predictor
 
 ## 📌 Overview
 
-This project predicts a user's personality based on their music preferences.
-It uses Spotify song features like energy, danceability, and valence to analyze patterns in music and classify personality types.
+This project predicts whether a student will **pass or fail** based on academic and personal factors using Machine Learning.
+
+It uses the **K-Nearest Neighbors (KNN)** algorithm and is deployed using **Streamlit** for an interactive user interface.
 
 ---
 
-## ⚙️ Technologies Used
+## 🚀 Features
 
-* Python
-* Pandas
-* Scikit-learn
-* Streamlit
-* Matplotlib
-
----
-
-## 🧠 Methodology
-
-1. **Data Collection**
-
-   * Used a Spotify dataset containing audio features of songs
-
-2. **Feature Selection**
-
-   * Selected features: energy, danceability, valence, tempo, loudness
-
-3. **Clustering (K-Means)**
-
-   * Grouped songs into 5 clusters
-   * Labeled clusters as: Chill, Sad, Energetic, Happy, Aggressive
-
-4. **Label Creation**
-
-   * Converted music types into personality labels
-
-5. **Classification Models**
-
-   * K-Nearest Neighbors (KNN)
-   * Naive Bayes
-
-6. **Prediction**
-
-   * User inputs music preferences
-   * Model predicts personality
+* Predict student performance (Pass/Fail)
+* Simple and interactive UI using Streamlit
+* Uses real-world student data
+* Clean and minimal design
+* Displays model accuracy
+* Visualizes user input
 
 ---
 
-## 🎯 Features
+## 📊 Dataset
 
-* Music clustering using K-Means
-* Personality prediction using KNN and Naive Bayes
-* Interactive UI using Streamlit
-* Visualization of user preferences
+* Dataset: Student Performance Dataset
+* Features used:
+
+  * Gender
+  * Age
+  * Study Time (weekly study hours level)
+  * Past Failures
+  * Absences
+  * G1 (First exam grade)
+  * G2 (Second exam grade)
 
 ---
 
-## ▶️ How to Run
+## 🧠 Model Used
 
-1. Install dependencies:
+* **K-Nearest Neighbors (KNN)**
+* Reason:
 
+  * Easy to understand
+  * Works well with small datasets
+  * Based on similarity between data points
+
+---
+
+## ⚙️ How It Works
+
+1. Data is loaded and cleaned
+2. Features are selected
+3. Target variable (Pass/Fail) is created
+4. Data is scaled using StandardScaler
+5. KNN model is trained
+6. User inputs data via Streamlit UI
+7. Model predicts whether student will pass or fail
+
+---
+
+## 🖥️ How to Run
+
+### 1. Install dependencies
+
+```bash
+pip install -r requirements.txt
 ```
-pip install pandas scikit-learn streamlit matplotlib
-```
 
-2. Run the app:
+### 2. Run the app
 
-```
+```bash
 streamlit run app.py
 ```
 
 ---
 
-## 📊 Example Output
+## 📈 Model Evaluation
 
-* Personality Type: The High-Energy Type
-* Description: You like to stay active and enjoy fast-paced vibes
+* Metric used: **Accuracy**
+* The model predicts based on similarity with other students
 
 ---
 
-## ⚠️ Note
+## 🛠️ Technologies Used
 
-This project is a simplified model and does not represent exact psychological analysis.
+* Python
+* Pandas
+* Scikit-learn
+* Matplotlib
+* Streamlit
+
+---
+
+## 🎯 Conclusion
+
+This project demonstrates how machine learning can be used to predict student performance and assist in academic analysis.
 
 ---
 
 ## 👨‍💻 Author
 
-Priyanshu Gupta
+* Priyanshu Gupta
