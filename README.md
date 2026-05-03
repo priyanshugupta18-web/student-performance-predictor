@@ -2,31 +2,36 @@
 
 ## 📌 Overview
 
-This project predicts whether a student will **pass or fail** based on academic and personal factors using Machine Learning.
+This project predicts a student’s academic performance using Machine Learning.
 
-It uses the **K-Nearest Neighbors (KNN)** algorithm and is deployed using **Streamlit** for an interactive user interface.
+Two approaches are implemented:
+
+* **Classification (KNN)** → Predicts Pass/Fail
+* **Regression (Random Forest)** → Predicts exact final grade (out of 20)
+
+The project is deployed using Streamlit for an interactive user interface.
 
 ---
 
 ## 🚀 Features
 
-* Predict student performance (Pass/Fail)
-* Simple and interactive UI using Streamlit
-* Uses real-world student data
-* Clean and minimal design
-* Displays model accuracy
-* Visualizes user input
+* Predict Pass/Fail outcome
+* Predict exact final grade
+* Interactive web app using Streamlit
+* Clean and simple UI
+* User input visualization
+* Model performance display
 
 ---
 
 ## 📊 Dataset
 
-* Dataset: Student Performance Dataset
-* Features used:
+* Student Performance Dataset
+* Key features used:
 
   * Gender
   * Age
-  * Study Time (weekly study hours level)
+  * Study Time
   * Past Failures
   * Absences
   * G1 (First exam grade)
@@ -34,14 +39,17 @@ It uses the **K-Nearest Neighbors (KNN)** algorithm and is deployed using **Stre
 
 ---
 
-## 🧠 Model Used
+## 🧠 Models Used
 
-* **K-Nearest Neighbors (KNN)**
-* Reason:
+### 🔹 KNN Classifier
 
-  * Easy to understand
-  * Works well with small datasets
-  * Based on similarity between data points
+* Used for Pass/Fail prediction
+* Based on similarity between students
+
+### 🔹 Random Forest Regressor
+
+* Used for predicting final grade (G3)
+* More powerful and accurate for numeric prediction
 
 ---
 
@@ -49,11 +57,10 @@ It uses the **K-Nearest Neighbors (KNN)** algorithm and is deployed using **Stre
 
 1. Data is loaded and cleaned
 2. Features are selected
-3. Target variable (Pass/Fail) is created
-4. Data is scaled using StandardScaler
-5. KNN model is trained
-6. User inputs data via Streamlit UI
-7. Model predicts whether student will pass or fail
+3. Data is preprocessed and encoded
+4. Models are trained
+5. User inputs data through Streamlit UI
+6. Model predicts result and displays output
 
 ---
 
@@ -75,8 +82,13 @@ streamlit run app.py
 
 ## 📈 Model Evaluation
 
-* Metric used: **Accuracy**
-* The model predicts based on similarity with other students
+* Classification:
+
+  * Accuracy
+* Regression:
+
+  * MAE (Mean Absolute Error)
+  * R² Score
 
 ---
 
@@ -92,10 +104,10 @@ streamlit run app.py
 
 ## 🎯 Conclusion
 
-This project demonstrates how machine learning can be used to predict student performance and assist in academic analysis.
+This project demonstrates how machine learning can be used to analyze and predict student performance using both classification and regression techniques.
 
 ---
 
 ## 👨‍💻 Author
 
-* Priyanshu Gupta
+**Priyanshu Gupta**
